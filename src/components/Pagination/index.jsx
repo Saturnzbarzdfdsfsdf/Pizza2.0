@@ -1,21 +1,37 @@
 import React from 'react'
-import ReactPaginate from 'react-paginate'
 
 import styles from './Pagination.module.scss'
 
- const Pagination = ({onPageChange}) => {
-	
-  return (
-		<ReactPaginate
-			className={styles.root}
-			breakLabel='...'
-			nextLabel='>'
-			previousLabel='<'
-			onPageChange={event => onPageChange(event.selected + 1)}
-			pageRangeDisplayed={4}
-			pageCount={3}
-			renderOnZeroPageCount={null}
-		/>
+const Pagination = ({ quantityPerPage, totalPosts, paginate }) => {
+	const pageNumber = []
+
+	for (let i = 1; i <= Math.ceil(totalPosts / quantityPerPage); i++) {
+		pageNumber.push(i)
+	}
+
+	const [activePage, setActivePage] = React.useState(1)
+
+	const handlePageClick = number => setActivePage(number)
+	console.log(activePage)
+	return (
+		<div>
+			<ul className={styles.pagination}>
+				{pageNumber.map(number => (
+					<li key={number}>
+						<p
+							className={`${styles.link} 
+									${activePage === number ? styles.active : ''}`}
+							onClick={() => {
+								handlePageClick(number)
+								paginate(number)
+							}}
+						>
+							{number}
+						</p>
+					</li>
+				))}
+			</ul>
+		</div>
 	)
 }
 
