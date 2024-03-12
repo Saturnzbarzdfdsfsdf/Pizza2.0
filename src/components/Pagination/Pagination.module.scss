@@ -2,6 +2,7 @@
 	display: flex;
 	justify-content: center;
 	gap: 10px;
+	padding-bottom: 10px;
 }
 
 .link {
@@ -17,6 +18,7 @@
 	border: 2px solid orangered;
 	background-color: rgb(255, 255, 255);
 	cursor: pointer;
+
 }
 .link:hover {
 	background-color: orangered;
@@ -30,5 +32,6 @@
 	color: #fff;
 	border-radius: 50%;
 }
+
 
 

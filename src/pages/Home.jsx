@@ -47,7 +47,8 @@ function Home({ searchValue }) {
 	const currentPosts = items.slice(indexOfFirstPost, indexOfLastPost)
 
 	//              Change Page
-	const paginate = (pageNumber) => setCurrentPage(pageNumber)
+	const paginate = (pageNumber) => setCurrentPage(pageNumber )
+//								Button Pagination
 
 	const pizzas = currentPosts.map(obj => (
 		<PizzaBlock key={obj.id} {...obj} />
@@ -69,6 +70,7 @@ function Home({ searchValue }) {
 			<h2 className='content__title'>Все пиццы</h2>
 			<div className='content__items'>{isLoading ? skeletons : pizzas}</div>
 			<Pagination
+				setCurrentPage={setCurrentPage}
 				quantityPerPage={quantityPerPage}
 				totalPosts={items.length}
 				paginate={paginate}

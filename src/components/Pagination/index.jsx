@@ -2,7 +2,12 @@ import React from 'react'
 
 import styles from './Pagination.module.scss'
 
-const Pagination = ({ quantityPerPage, totalPosts, paginate }) => {
+const Pagination = ({
+	quantityPerPage,
+	totalPosts,
+	paginate,
+	setCurrentPage,
+}) => {
 	const pageNumber = []
 
 	for (let i = 1; i <= Math.ceil(totalPosts / quantityPerPage); i++) {
@@ -12,7 +17,19 @@ const Pagination = ({ quantityPerPage, totalPosts, paginate }) => {
 	const [activePage, setActivePage] = React.useState(1)
 
 	const handlePageClick = number => setActivePage(number)
-	console.log(activePage)
+
+	const next = () => {
+		setCurrentPage(next => next + 1) 
+		setActivePage(next => next + 1)
+	} 
+		
+	const prev = () => {
+		setCurrentPage(next => next - 1)
+		setActivePage(next => next - 1)
+	} 
+		
+
+	// console.log(activePage)
 	return (
 		<div>
 			<ul className={styles.pagination}>
@@ -31,6 +48,14 @@ const Pagination = ({ quantityPerPage, totalPosts, paginate }) => {
 					</li>
 				))}
 			</ul>
+			<div className='pagination__btn'>
+				<button className='button' onClick={prev}>
+					Prev
+				</button>
+				<button className='button' onClick={next}>
+					Next
+				</button>
+			</div>
 		</div>
 	)
 }
