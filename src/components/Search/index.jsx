@@ -1,7 +1,34 @@
 import React from 'react'
 import styles from './Search.module.scss'
+import debounce from 'lodash.debounce'
 
-const Search = ({ searchValue, setSearchValue }) => {
+import { SearchContext } from '../../App'
+
+const Search = () => {
+	const [value, setValue] = React.useState()
+	const {searchValue, setSearchValue } = React.useContext(SearchContext)
+
+	const inputRef = React.useRef()
+
+	const updateSearchValue = React.useCallback(
+		debounce(str => {
+			setSearchValue(str)
+		}, 500),
+		[],
+	)
+
+	const onClickClear = () => {
+		setValue('')
+		setSearchValue('')
+		// document.querySelector('input').focus();
+		inputRef.current.focus()
+	}
+
+	const onChangeInput = event => {
+		setValue(event.target.value)
+		updateSearchValue(event.target.value)
+	}
+	
 	return (
 		<div className={styles.root}>
 			<svg
@@ -42,31 +69,32 @@ const Search = ({ searchValue, setSearchValue }) => {
 				</g>
 			</svg>
 			<input
-				value={searchValue}
-				onChange={event => setSearchValue(event.target.value)}
+				ref={inputRef}
+				value={value}
+				onChange={onChangeInput}
 				className={styles.input}
 				placeholder='Search pizzas..'
 			/>
-			{searchValue && (
-			<svg
-				onClick={() => setSearchValue('')}
-				className={styles.close}
-				viewBox='0 0 64.00 64.00'
-				xmlns='http://www.w3.org/2000/svg'
-				fill='none'
-				stroke='#000000'
-			>
-				<g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
-				<g
-					id='SVGRepo_tracerCarrier'
-					strokeLinecap='round'
-					strokeLinejoin='round'
-				></g>
-				<g id='SVGRepo_iconCarrier'>
-					<line x1='16' y1='16' x2='48' y2='48'></line>
-					<line x1='48' y1='16' x2='16' y2='48'></line>
-				</g>
-			</svg>
+			{value && (
+				<svg
+					onClick={onClickClear}
+					className={styles.close}
+					viewBox='0 0 64.00 64.00'
+					xmlns='http://www.w3.org/2000/svg'
+					fill='none'
+					stroke='#000000'
+				>
+					<g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
+					<g
+						id='SVGRepo_tracerCarrier'
+						strokeLinecap='round'
+						strokeLinejoin='round'
+					></g>
+					<g id='SVGRepo_iconCarrier'>
+						<line x1='16' y1='16' x2='48' y2='48'></line>
+						<line x1='48' y1='16' x2='16' y2='48'></line>
+					</g>
+				</svg>
 			)}
 		</div>
 	)
