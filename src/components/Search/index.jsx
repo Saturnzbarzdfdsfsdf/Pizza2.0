@@ -5,28 +5,29 @@ import debounce from 'lodash.debounce'
 import { SearchContext } from '../../App'
 
 const Search = () => {
+	
+	const inputRef = React.useRef()
+
 	const [value, setValue] = React.useState()
 	const {searchValue, setSearchValue } = React.useContext(SearchContext)
 
-	const inputRef = React.useRef()
-
 	const updateSearchValue = React.useCallback(
-		debounce(str => {
-			setSearchValue(str)
+		debounce(string => {
+			setSearchValue(string)
 		}, 500),
 		[],
 	)
+
+	const onChangeInput = event => {
+		setValue(event.target.value)
+		updateSearchValue(event.target.value)
+	}
 
 	const onClickClear = () => {
 		setValue('')
 		setSearchValue('')
 		// document.querySelector('input').focus();
 		inputRef.current.focus()
-	}
-
-	const onChangeInput = event => {
-		setValue(event.target.value)
-		updateSearchValue(event.target.value)
 	}
 	
 	return (

@@ -1,7 +1,8 @@
 import React from 'react'
+import axios from 'axios'
 
-// import { useSelector, useDispatch } from 'react-redux'
-// import { decrement, increment } from './counterSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { setCategoryId } from '../redux/slices/filterSlice'
 
 import {
 	Categories,
@@ -12,6 +13,12 @@ import {
 } from '../components'
 
 function Home({ searchValue }) {
+	// redux
+	const dispatch = useDispatch()
+	const {categoryId, sort} = useSelector(state => state.filter)
+	// const categoryId = useSelector(state => state.filter.categoryId)
+	// const sortType = useSelector(state => state.filter.sort.sortProperty)
+
 	const [items, setItems] = React.useState([])
 	const [isLoading, setIsLoading] = React.useState(true)
 
@@ -19,30 +26,30 @@ function Home({ searchValue }) {
 	const [currentPage, setCurrentPage] = React.useState(1)
 	const [quantityPerPage] = React.useState(4)
 
-	const [categoryId, setCategoryId] = React.useState(0)
-
-	const [sortType, setSortType] = React.useState({
-		name: 'Популярности',
-		sortProperty: 'rating',
-	})
+	// redux
+	const onChangeCategory = index => {
+		dispatch(setCategoryId(index))
+	}
 
 	React.useEffect(() => {
 		const fetchPizzas = async () => {
 			setIsLoading(true)
 
-			const sortBy = sortType.sortProperty
+			const sortBy = sort.sortProperty
 			const category = categoryId > 0 ? `&category=${categoryId}` : ''
 			const search = searchValue ? `&name=${searchValue}*` : ''
 
-			const res = await fetch(`https://95615a27e7e2262f.mokky.dev/items?
+			 await axios.get(`https://95615a27e7e2262f.mokky.dev/items?
 		${category}&sortBy=${sortBy}${search}`)
-			const data = await res.json()
-			setItems(data)
+			.then((res) => {
+				setItems(res.data)
+				
+				setIsLoading(false)
+			})
 
-			setIsLoading(false)
 		}
 		fetchPizzas()
-	}, [categoryId, sortType, searchValue])
+	}, [categoryId, sort.sortProperty, searchValue])
 
 	//               Get Current Posts:
 	const indexOfLastPost = currentPage * quantityPerPage
@@ -50,25 +57,20 @@ function Home({ searchValue }) {
 	const currentPosts = items.slice(indexOfFirstPost, indexOfLastPost)
 
 	//              Change Page
-	const paginate = (pageNumber) => setCurrentPage(pageNumber )
-//								Button Pagination
+	const paginate = pageNumber => setCurrentPage(pageNumber)
+	//								Button Pagination
 
-	const pizzas = currentPosts.map(obj => (
-		<PizzaBlock key={obj.id} {...obj} />
-	))
+	const pizzas = currentPosts.map(obj => <PizzaBlock key={obj.id} {...obj} />)
 
 	const skeletons = [...new Array(12)].map((_, index) => (
 		<PizzaLoadingBlock key={index} />
 	))
-	
+
 	return (
 		<div className='container'>
 			<div className='content__top'>
-				<Categories
-					value={categoryId}
-					onChangeCategory={i => setCategoryId(i)}
-				/>
-				<SortPopup value={sortType} onChangeSort={i => setSortType(i)} />
+				<Categories value={categoryId} onChangeCategory={onChangeCategory} />
+				<SortPopup value={sort.sortProperty} onChangeSort={onChangeCategory} />
 			</div>
 			<h2 className='content__title'>Все пиццы</h2>
 			<div className='content__items'>{isLoading ? skeletons : pizzas}</div>

@@ -14,13 +14,13 @@ import { setSort } from '../redux/slices/filterSlice'
 
 function SortPopup() {
 	// redux
-	const sort = useSelector(state => state.filter.sort)
 	const dispatch = useDispatch()
+	const sort = useSelector(state => state.filter.sort)
 
 	const sortRef = React.useRef(null)
 
 	const [open, setOpen] = React.useState(false)
-
+	// redux
 	const onClickSelectedPopup = obj => {
 		dispatch(setSort(obj))
 		setOpen(false)
@@ -57,7 +57,7 @@ function SortPopup() {
 			{open && (
 				<div className='sort__popup'>
 					<ul>
-						{list.map((obj, i) => (
+						{list.map((obj) => (
 							<li
 								key={obj.name}
 								onClick={() => onClickSelectedPopup(obj)}
