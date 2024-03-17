@@ -1,35 +1,39 @@
 import React from 'react'
 
+import { useDispatch, useSelector } from 'react-redux'
+import { setActivePage, setCurrentPage } from '../../redux/slices/filterSlice'
+
 import styles from './Pagination.module.scss'
 
 const Pagination = ({
 	quantityPerPage,
 	totalPosts,
 	paginate,
-	setCurrentPage,
 }) => {
+
 	const pageNumber = []
 
 	for (let i = 1; i <= Math.ceil(totalPosts / quantityPerPage); i++) {
 		pageNumber.push(i)
 	}
+	
+	const dispatch = useDispatch()
+		const { activePage, currentPage} = useSelector(state => state.filter)
 
-	const [activePage, setActivePage] = React.useState(1)
 
 	const handlePageClick = number => setActivePage(number)
 
 	const next = () => {
-		setCurrentPage(next => next + 1) 
-		setActivePage(next => next + 1)
+		dispatch(setCurrentPage(currentPage + 1))
+		dispatch(setActivePage(activePage + 1))
 	} 
 		
 	const prev = () => {
-		setCurrentPage(next => next - 1)
-		setActivePage(next => next - 1)
+			dispatch(setCurrentPage(currentPage - 1))
+			dispatch(setActivePage(activePage - 1))
 	} 
 		
-
-	// console.log(activePage)
+	console.log()
 	return (
 		<div>
 			<ul className={styles.pagination}>
@@ -37,7 +41,7 @@ const Pagination = ({
 					<li key={number}>
 						<p
 							className={`${styles.link} 
-									${activePage === number ? styles.active : ''}`}
+									${currentPage === number ? styles.active : ''}`}
 							onClick={() => {
 								handlePageClick(number)
 								paginate(number)
